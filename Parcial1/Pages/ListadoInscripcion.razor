@@ -1,5 +1,36 @@
-﻿<h3>ListadoInscripcion</h3>
+﻿@page "/listado"
+<h3>Listado de Inscripcion</h3>
 
-@code {
+<table class="table">
+	<thead>
+		<tr>
+			<th>Semestre</th>
+			<th>Limite</th>
+			<th>Tomados</th>
+			<th>Disponible</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in lista)
+		{
+			<tr>
+				<th>@item.Semestre</th>
+				<th>@item.Limite</th>
+				<th>@item.Tomados</th>
+				<th>@item.Disponible</th>
+			</tr>
+		}
+	</tbody>
+</table>
 
+@code { 
+
+	public List<Inscripcion> lista;
+	
+	protected override void OnInitialized()
+	{
+		InscripcionController controller = new InscripcionController();
+		
+		lista = controller.GetInscripcions(e => true);
+	}
 }

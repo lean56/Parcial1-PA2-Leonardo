@@ -13,7 +13,7 @@ namespace Parcial1.Controller
     {
         public bool Guardar(Inscripcion inscripcion)
         {
-            Contexto db = new Contexto();
+            Contexto contexto = new Contexto();
             bool paso = false;
 
             try
@@ -27,10 +27,13 @@ namespace Parcial1.Controller
                     paso = Modificar(inscripcion);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                ex.Message.ToString();
+            }
+            finally
+            {
+                contexto.Dispose();
             }
             return paso;
 
@@ -38,13 +41,13 @@ namespace Parcial1.Controller
 
         private bool Insertar(Inscripcion inscripcion)
         {
-            Contexto db = new Contexto();
+            Contexto contexto = new Contexto();
             bool paso = false;
 
             try
             {
-                db.Inscripcion.Add(inscripcion);
-                paso = db.SaveChanges() > 0;
+                contexto.Inscripcion.Add(inscripcion);
+                paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)
             {
@@ -55,17 +58,16 @@ namespace Parcial1.Controller
 
         private bool Modificar(Inscripcion inscripcion)
         {
-            Contexto db = new Contexto();
+            Contexto contexto = new Contexto();
             bool paso = false;
             try
             {
-                db.Inscripcion.Add(inscripcion);
-                db.Entry(inscripcion).State = EntityState.Modified;
-                paso = db.SaveChanges() > 0;
+                contexto.Inscripcion.Add(inscripcion);
+                contexto.Entry(inscripcion).State = EntityState.Modified;
+                paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)
             {
-
                 throw;
             }
             return paso;
@@ -73,16 +75,15 @@ namespace Parcial1.Controller
 
         public Inscripcion Buscar(int id)
         {
-            Contexto db = new Contexto();
+            Contexto contexto = new Contexto();
             Inscripcion inscripcion = new Inscripcion();
 
             try
             {
-                db.Inscripcion.Find(id);
+              inscripcion = contexto.Inscripcion.Find(id);
             }
             catch (Exception)
             {
-
                 throw;
             }
             return inscripcion;
@@ -90,15 +91,15 @@ namespace Parcial1.Controller
 
         public bool Eliminar(int id)
         {
-            Contexto db = new Contexto();
+            Contexto contexto = new Contexto();
             Inscripcion inscripcion = new Inscripcion();
             bool paso = false;
 
             try
             {
-                inscripcion = db.Inscripcion.Find(id);
-                db.Entry(inscripcion).State = EntityState.Deleted;
-                paso = db.SaveChanges() > 0;
+                inscripcion = contexto.Inscripcion.Find(id);
+                contexto.Entry(inscripcion).State = EntityState.Deleted;
+                paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)
             {
@@ -111,14 +112,13 @@ namespace Parcial1.Controller
         public List<Inscripcion> GetInscripcions(Expression<Func<Inscripcion, bool>> expression)
         {
             List<Inscripcion> lista;
-            Contexto db = new Contexto();
+            Contexto contexto = new Contexto();
             try
             {
-                lista = db.Inscripcion.Where(expression).ToList();
+                lista = contexto.Inscripcion.Where(expression).ToList();
             }
             catch (Exception)
             {
-
                 throw;
             }
             return lista;

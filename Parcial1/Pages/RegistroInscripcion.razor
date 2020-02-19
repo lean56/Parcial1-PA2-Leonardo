@@ -1,6 +1,51 @@
 ﻿@page "/inscripcion"
 <h3>Registro de Inscripcion</h3>
 
+<EditForm Model="Inscripcion" OnValidSubmit="Guardar">
+	<DataAnnotationsValidator/>
+
+	<div class="form-group">
+		<label for="InscripcionId">Inscripcion Id</label>
+		<div class="input-group col-sm-3">
+			<InputNumber @bind-Value="@Inscripcion.InscripcionId" class="form-control"/>
+			<ValidationMessage For="@(()=>Inscripcion.InscripcionId)"/>
+			<button type="button" class="btn btn-outline-primary" @onclick="Buscar">Buscar</button>
+		</div>
+
+		<div class="form-group">
+			<label for="Semestre">Semestre</label>
+			<InputText @bind-Value="@Inscripcion.Semestre" class="form-control"/>
+			<ValidationMessage For="@(()=>Inscripcion.Semestre)"/>
+		</div>
+
+		<div class="form-group">
+			<label for="Limite">Limite</label>
+			<InputNumber @bind-Value="@Inscripcion.Limite" class="form-control" @oninput="CalcularCreditos" @onfocusin="CalcularCreditos" />
+			<ValidationMessage For="@(()=>Inscripcion.Limite)"/>
+		</div>
+
+		<div class="form-group">
+			<label for="Tomados">Creditos Tomados</label>
+			<InputNumber @bind-Value="@Inscripcion.Tomados" class="form-control" @oninput="CalcularCreditos" @onfocusin="CalcularCreditos"/>
+			<ValidationMessage For="@(()=>Inscripcion.Tomados)"/>
+		</div>
+
+		<div class="form-group">
+			<label for="Disponible">Creditos Disponible</label>
+			<InputNumber @bind-Value="@Inscripcion.Disponible" class="form-control" disabled/>
+			<ValidationMessage For="@(()=>Inscripcion.Disponible)"/>
+		</div>
+
+		<div class="form-group">
+			<button type="button" class="btn btn-outline-info" @onclick="Limpiar">Limpiar</button>
+			<button type="submit" class="btn btn-outline-secondary">Guardar</button>
+			<button type="button" class="btn btn-outline-danger" @onclick="Eliminar">Eliminar</button>
+		</div>
+
+		<h5 class="text-success">@mensaje</h5>
+	</div>
+
+</EditForm>
 
 @code {
 
@@ -11,13 +56,22 @@
 	{
 		InscripcionController controller = new InscripcionController();
 
-		if (controller.Guardar(Inscripcion))
+		if (Inscripcion.Tomados > Inscripcion.Limite)
 		{
-			mensaje = "Inscripcion Guardada";
+			mensaje = "Los Credito Tomados no pueden ser Mayor a los Limites";
 		}
 		else
 		{
-			mensaje = "Error al guardar";
+			if (controller.Guardar(Inscripcion))
+			{
+				Limpiar();
+				mensaje = "Inscripcion Guardada";
+			}
+			else
+			{
+				Limpiar();
+				mensaje = "Error al guardar";
+			}
 		}
 	}
 
@@ -25,11 +79,57 @@
 	{
 		InscripcionController controller = new InscripcionController();
 
-		var temporal = controller.Buscar(Inscripcion.InscripcionId);
+		var inscripcion = controller.Buscar(Inscripcion.InscripcionId);
 
+		if (inscripcion !=null)
+		{
+			Limpiar();
+			Inscripcion = inscripcion;
+		}
+		else
+		{
+			Limpiar();
+			mensaje = "Inscripcion no Existe";
+		}
 
 	}
 
+	public void Eliminar()
+	{
+		InscripcionController controller = new InscripcionController();
 
+		var inscripcion = controller.Buscar(Inscripcion.InscripcionId);
+
+		if (inscripcion !=null)
+		{
+			controller.Eliminar(Inscripcion.InscripcionId);
+			Limpiar();
+			mensaje = "Inscripcion Eliminada";
+		}
+		else
+		{
+			this.Inscripcion = new Inscripcion();
+			mensaje = "Inscripcion no Existe";
+		}
+
+	}
+
+	public void Limpiar()
+	{
+		this.Inscripcion = new Inscripcion();
+		mensaje = "";
+	}
+
+	public void CalcularCreditos()
+	{
+		if (Inscripcion != null)
+		{
+			Inscripcion.Disponible = Inscripcion.Limite - Inscripcion.Tomados;
+		}
+		else
+		{
+			mensaje = "Error al Calcular";
+		}
+	}
 
 }

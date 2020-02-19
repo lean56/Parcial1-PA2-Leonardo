@@ -10,9 +10,11 @@ namespace Parcial1.Models
     {
         [Key]
         public int InscripcionId { get; set; }
-        [Required]
+        [Required(ErrorMessage ="El Semestre es Obligatorio!!!")]
         public string Semestre { get; set; }
+        [Range(minimum:1,maximum:28,ErrorMessage ="El limite de creditos es 28")]
         public int Limite { get; set; }
+        [Range(minimum: 1, maximum: 28, ErrorMessage = "El limite de creditos tomado es 28")]
         public int Tomados { get; set; }
         public int Disponible { get; set; }
         public Inscripcion()
