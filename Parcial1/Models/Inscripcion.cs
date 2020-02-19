@@ -10,6 +10,7 @@ namespace Parcial1.Models
     {
         [Key]
         public int InscripcionId { get; set; }
+        [Required]
         public string Semestre { get; set; }
         public int Limite { get; set; }
         public int Tomados { get; set; }

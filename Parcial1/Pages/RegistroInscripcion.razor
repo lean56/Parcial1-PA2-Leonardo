@@ -1,0 +1,35 @@
+﻿@page "/inscripcion"
+<h3>Registro de Inscripcion</h3>
+
+
+@code {
+
+	public Inscripcion Inscripcion = new Inscripcion();
+	public string mensaje = "";
+
+	public void Guardar()
+	{
+		InscripcionController controller = new InscripcionController();
+
+		if (controller.Guardar(Inscripcion))
+		{
+			mensaje = "Inscripcion Guardada";
+		}
+		else
+		{
+			mensaje = "Error al guardar";
+		}
+	}
+
+	public void Buscar()
+	{
+		InscripcionController controller = new InscripcionController();
+
+		var temporal = controller.Buscar(Inscripcion.InscripcionId);
+
+
+	}
+
+
+
+}
