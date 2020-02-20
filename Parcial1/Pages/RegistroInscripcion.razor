@@ -19,14 +19,14 @@
 		</div>
 
 		<div class="form-group">
-			<label for="Limite">Limite</label>
-			<InputNumber @bind-Value="@Inscripcion.Limite" class="form-control" @oninput="CalcularCreditos" @onfocusin="CalcularCreditos" />
+			<label for="Limite">Limite de Creditos</label>
+			<InputNumber @bind-Value="@Inscripcion.Limite" class="form-control" @oninput="CalcularCreditos" @onfocusin="CalcularCreditos" @onfocusout="CalcularCreditos" />
 			<ValidationMessage For="@(()=>Inscripcion.Limite)"/>
 		</div>
 
 		<div class="form-group">
 			<label for="Tomados">Creditos Tomados</label>
-			<InputNumber @bind-Value="@Inscripcion.Tomados" class="form-control" @oninput="CalcularCreditos" @onfocusin="CalcularCreditos"/>
+			<InputNumber @bind-Value="@Inscripcion.Tomados" class="form-control" @oninput="CalcularCreditos" @onfocusin="CalcularCreditos" @onfocusout="CalcularCreditos"/>
 			<ValidationMessage For="@(()=>Inscripcion.Tomados)"/>
 		</div>
 
